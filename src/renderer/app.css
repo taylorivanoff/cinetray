@@ -1,6 +1,6 @@
 /* App page layout: reuses the settings look */
 .container {
-  max-width: 860px;
+  max-width: 920px;
 }
 
 .app-header {
@@ -12,37 +12,27 @@
 
 .main-layout {
   display: grid;
-  grid-template-columns: 1fr 1.25fr;
-  gap: 12px;
+  grid-template-columns: minmax(300px, 1fr) minmax(380px, 1.35fr);
+  gap: 16px;
   align-items: start;
 }
 
-.left-pane { min-width: 320px; }
-.right-pane { min-width: 380px; }
-
-.settings-title {
-  margin: 0 0 8px 0;
-  font-size: 16px;
-  font-weight: 600;
+.pane-title {
+  margin-bottom: 10px;
 }
 
-.settings-hint {
-  margin: 0 0 16px 0;
+.left-pane {
+  min-width: 0;
 }
 
-.plain-card {
-  padding: 0 !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  border-radius: 0 !important;
+.right-pane {
+  min-width: 0;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  padding-right: 2px;
 }
 
-.settings-grid-section {
-  align-items: flex-start;
-  gap: 18px;
-}
-
-/* Embedded Console (matches renderer/log.html styling) */
+/* Embedded Console */
 .console-panel {
   margin-top: 12px;
   border-radius: 8px;
@@ -90,13 +80,13 @@
     grid-template-columns: 1fr;
   }
 
-  .left-pane,
   .right-pane {
-    min-width: 0;
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 0;
   }
 
   .console-out {
     height: min(280px, 35vh);
   }
 }
-

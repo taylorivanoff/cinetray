@@ -14,12 +14,16 @@ body {
 }
 
 .container {
-  max-width: 580px;
+  max-width: 640px;
   min-width: 440px;
   padding: 24px 24px 32px;
 }
 
 /* Page header */
+.page-header {
+  margin-bottom: 20px;
+}
+
 h1 {
   font-size: 28px;
   font-weight: 600;
@@ -29,9 +33,9 @@ h1 {
 
 .hint {
   color: #605e5c;
-  margin: 0 0 24px 0;
+  margin: 0;
   font-size: 13px;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .hint a {
@@ -43,7 +47,71 @@ h1 {
   text-decoration: underline;
 }
 
-/* Section groups as cards */
+/* Settings panel */
+.settings-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.settings-intro {
+  margin-bottom: 4px;
+}
+
+.settings-section {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.settings-section-title {
+  margin: 0;
+  padding: 14px 18px 0;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #605e5c;
+}
+
+.settings-section-body {
+  padding: 12px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.templates-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 560px) {
+  .templates-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Fields */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-weight: 500;
+  font-size: 13px;
+  color: #323130;
+}
+
+.field-action {
+  padding-top: 4px;
+}
+
+/* Legacy section-group / card (used by app left pane) */
 .section-group {
   margin-bottom: 24px;
 }
@@ -84,18 +152,10 @@ section label {
   color: #323130;
 }
 
-section label.checkbox {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 400;
-  margin-bottom: 0;
-  cursor: pointer;
-}
-
-/* Text inputs - Windows style */
+/* Text inputs */
 input[type="text"],
-input[type="password"] {
+input[type="password"],
+input[type="number"] {
   width: 100%;
   padding: 8px 12px;
   border: 1px solid #8a8886;
@@ -108,12 +168,14 @@ input[type="password"] {
 }
 
 input[type="text"]:hover,
-input[type="password"]:hover {
+input[type="password"]:hover,
+input[type="number"]:hover {
   border-color: #323130;
 }
 
 input[type="text"]:focus,
-input[type="password"]:focus {
+input[type="password"]:focus,
+input[type="number"]:focus {
   outline: none;
   border-color: #0078d4;
   box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
@@ -121,6 +183,10 @@ input[type="password"]:focus {
 
 input::placeholder {
   color: #a19f9d;
+}
+
+input[type="number"] {
+  max-width: 160px;
 }
 
 /* Buttons */
@@ -132,6 +198,7 @@ input::placeholder {
 
 .row input {
   flex: 1;
+  min-width: 0;
 }
 
 button {
@@ -143,6 +210,8 @@ button {
   font-family: inherit;
   cursor: pointer;
   transition: background 0.1s, filter 0.1s;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 button.primary {
@@ -171,13 +240,15 @@ button.secondary:active {
   background: #d2d0ce;
 }
 
-/* Watch paths list */
+/* Watch paths */
+.watch-paths,
 #watchPaths {
   list-style: none;
   padding: 0;
-  margin: 0 0 12px 0;
+  margin: 0;
 }
 
+.watch-paths li,
 #watchPaths li {
   display: flex;
   align-items: center;
@@ -189,6 +260,12 @@ button.secondary:active {
   border: 1px solid #edebe9;
 }
 
+.watch-paths li:last-child,
+#watchPaths li:last-child {
+  margin-bottom: 0;
+}
+
+.watch-paths li span,
 #watchPaths li span {
   flex: 1;
   overflow: hidden;
@@ -196,40 +273,93 @@ button.secondary:active {
   white-space: nowrap;
   font-size: 13px;
   color: #323130;
+  min-width: 0;
 }
 
+.watch-paths li button,
 #watchPaths li button {
   padding: 4px 12px;
   font-size: 13px;
 }
 
+.watch-paths-empty {
+  justify-content: center !important;
+  color: #a19f9d !important;
+  font-size: 13px !important;
+  font-style: italic;
+  background: transparent !important;
+  border-style: dashed !important;
+}
+
 #addFolder,
 #pickOutput,
 #testKey {
-  margin-top: 4px;
+  align-self: flex-start;
 }
 
 .help {
   display: block;
   font-size: 12px;
   color: #605e5c;
-  margin-top: 6px;
+  line-height: 1.4;
 }
 
-/* Checkbox - Windows style */
+/* Options */
+.option-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+label.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #323130;
+  cursor: pointer;
+  margin: 0;
+}
+
+label.checkbox span {
+  line-height: 1.35;
+}
+
+.option-nested {
+  margin: 0 0 4px 28px;
+  padding: 10px 12px;
+  border-left: 2px solid #edebe9;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.option-nested[hidden] {
+  display: none;
+}
+
+.option-nested label {
+  margin: 0;
+  font-weight: 500;
+  font-size: 13px;
+  color: #323130;
+}
+
+/* Checkbox */
 input[type="checkbox"] {
   width: 18px;
   height: 18px;
   margin: 0;
   accent-color: #0078d4;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 /* Status messages */
 .status {
   display: block;
   font-size: 12px;
-  margin-top: 6px;
   min-height: 18px;
   color: #605e5c;
 }
@@ -242,11 +372,23 @@ input[type="checkbox"] {
   color: #d13438;
 }
 
-/* Save section - separate card at bottom */
-.save-section {
-  margin-top: 8px;
+/* Save footer */
+.settings-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  bottom: 0;
 }
 
-.save-section button {
+.settings-footer .status {
+  margin: 0;
+}
+
+.settings-footer button {
   min-width: 100px;
 }

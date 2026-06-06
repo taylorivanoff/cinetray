@@ -25,8 +25,20 @@
     el.className = 'status' + (text ? (isError ? ' err' : ' ok') : '');
   }
 
+  function updatePollingVisibility() {
+    const section = document.getElementById('pollingIntervalSection');
+    if (section) section.hidden = !usePollingEl.checked;
+  }
+
   function renderWatchPaths(paths) {
     watchPathsList.innerHTML = '';
+    if (!paths || paths.length === 0) {
+      const li = document.createElement('li');
+      li.className = 'watch-paths-empty';
+      li.textContent = 'No watch folders added yet.';
+      watchPathsList.appendChild(li);
+      return;
+    }
     (paths || []).forEach((p, i) => {
       const li = document.createElement('li');
       const span = document.createElement('span');
@@ -57,7 +69,10 @@
     pollingIntervalMsEl.value = String(s.pollingIntervalMs ?? 2000);
     dryRunEl.checked = !!s.dryRun;
     renderWatchPaths(s.watchPaths);
+    updatePollingVisibility();
   }
+
+  usePollingEl.addEventListener('change', updatePollingVisibility);
 
   testKeyBtn.addEventListener('click', async () => {
     const key = apiKeyEl.value.trim();
@@ -102,7 +117,7 @@
 
   saveBtn.addEventListener('click', async () => {
     const paths = [];
-    watchPathsList.querySelectorAll('li span').forEach((span) => {
+    watchPathsList.querySelectorAll('li:not(.watch-paths-empty) span').forEach((span) => {
       if (span.textContent) paths.push(span.textContent);
     });
     const interval = parseInt(pollingIntervalMsEl.value, 10);

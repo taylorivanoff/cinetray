@@ -7,7 +7,7 @@ const TV_PATTERNS = [
   /^(.+?)[.\s_-]+(\d{1,2})x(\d{1,2})(?:[.\s_-]|$)/i,
 ];
 
-const MOVIE_YEAR_PATTERN = /^(.+?)[.\s_-]+(19|20)\d{2}(?:[.\s_-]|$)/;
+const MOVIE_YEAR_PATTERN = /^(.+?)[.\s_-]+((19|20)\d{2})(?:[.\s_-]|$)/;
 
 function sanitizeTitle(raw: string): string {
   return raw
@@ -37,7 +37,7 @@ export function parseFilename(filePath: string): ParsedFile | null {
   const yearMatch = basename.match(MOVIE_YEAR_PATTERN);
   if (yearMatch) {
     const title = sanitizeTitle(yearMatch[1]);
-    const year = parseInt(yearMatch[2] + yearMatch[3].slice(0, 2), 10);
+    const year = parseInt(yearMatch[2], 10);
     if (title && year >= 1900 && year <= 2100) {
       return { type: 'movie', title, year, extension };
     }

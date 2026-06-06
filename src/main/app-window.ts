@@ -19,9 +19,9 @@ export function createOrShowAppWindow(): void {
   const appHtmlPath = path.join(appPath, 'src', 'renderer', 'app.html');
 
   appWindow = new BrowserWindow({
-    width: 860,
+    width: 920,
     height: 720,
-    minWidth: 720,
+    minWidth: 760,
     minHeight: 560,
     title: 'Tidy Tray',
     show: false,
