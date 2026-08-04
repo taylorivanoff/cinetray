@@ -4,7 +4,7 @@
   "author": {
     "name": "Taylor Ivanoff"
   },
-  "version": "1.0.6",
+  "version": "1.0.7",
   "repository": "https://github.com/taylorivanoff/tidy-tray",
   "main": "dist/main/main.js",
   "scripts": {
@@ -42,14 +42,6 @@
       "hardenedRuntime": true,
       "gatekeeperAssess": false
     },
-    "linux": {
-      "icon": "resources/icon.png",
-      "target": [
-        "AppImage",
-        "deb"
-      ],
-      "category": "Utility"
-    },
     "afterPack": "./scripts/after-pack.js"
   },
   "dependencies": {
@@ -64,4 +56,3 @@
     "typescript": "^5.3.0"
   }
 }
-
