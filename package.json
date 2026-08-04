@@ -1,15 +1,17 @@
 {
   "name": "media-renamer-tray",
   "description": "System tray app that renames TV and movie files automatically using TMDB.",
-  "author": { "name": "Taylor Ivanoff" },
+  "author": {
+    "name": "Taylor Ivanoff"
+  },
   "version": "1.0.5",
   "repository": "https://github.com/taylorivanoff/tidy-tray",
   "main": "dist/main/main.js",
   "scripts": {
     "build": "tsc",
     "start": "npm run build && electron .",
-    "clean:release": "node -e \"try { require('fs').rmSync('dist/win-unpacked', { recursive: true }); } catch (e) { if (e.code !== 'ENOENT' && e.code !== 'EPERM' && e.code !== 'EBUSY') throw e; }\"",
-    "release": "npm run build && npm run clean:release && electron-builder --win --x64 --publish=never"
+    "clean:release": "node -e \"const fs=require('fs'); for (const d of ['dist/win-unpacked','dist/mac','dist/mac-arm64','dist/linux-unpacked']) { try { fs.rmSync(d,{recursive:true}); } catch (e) { if (e.code!=='ENOENT'&&e.code!=='EPERM'&&e.code!=='EBUSY') throw e; } }\"",
+    "release": "npm run build && npm run clean:release && electron-builder --publish=never"
   },
   "build": {
     "appId": "io.github.taylorivanoff.media-renamer-tray",
@@ -29,6 +31,22 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "include": "installer.nsh"
+    },
+    "mac": {
+      "icon": "resources/icon.png",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.utilities"
+    },
+    "linux": {
+      "icon": "resources/icon.png",
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility"
     }
   },
   "dependencies": {
