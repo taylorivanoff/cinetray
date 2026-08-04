@@ -3,7 +3,6 @@
 [![Release](https://img.shields.io/github/v/release/taylorivanoff/tidy-tray)](https://github.com/taylorivanoff/tidy-tray/releases)
 [![Downloads](https://img.shields.io/github/downloads/taylorivanoff/tidy-tray/total)](https://github.com/taylorivanoff/tidy-tray/releases)
 [![License](https://img.shields.io/github/license/taylorivanoff/tidy-tray)](LICENSE)
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support-yellow?style=flat&logo=buy-me-a-coffee)](https://buymeacoffee.com/taylorivanoff)
 
 **Tidy Tray** is a Windows **media file organizer** that renames and sorts movie and TV show files using [The Movie Database (TMDB)](https://www.themoviedb.org). It runs from the system tray, watches download folders, matches filenames to TMDB metadata, and moves files into clean show/season or movie folders - like a lightweight local alternative to manual renaming tools.
 
