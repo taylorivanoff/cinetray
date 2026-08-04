@@ -29,8 +29,7 @@
       "target": "nsis"
     },
     "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
+      "oneClick": true,
       "include": "installer.nsh"
     },
     "mac": {
