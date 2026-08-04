@@ -10,6 +10,7 @@
   "scripts": {
     "build": "tsc",
     "start": "npm run build && electron .",
+    "bump": "node scripts/bump-version.js",
     "clean:release": "node -e \"const fs=require('fs'); for (const d of ['dist/win-unpacked','dist/mac','dist/mac-arm64','dist/linux-unpacked']) { try { fs.rmSync(d,{recursive:true}); } catch (e) { if (e.code!=='ENOENT'&&e.code!=='EPERM'&&e.code!=='EBUSY') throw e; } }\"",
     "release": "npm run build && npm run clean:release && electron-builder --publish=never"
   },
