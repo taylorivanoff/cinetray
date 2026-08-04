@@ -49,6 +49,18 @@ if (!gotTheLock) {
   app.on('second-instance', () => {
     createOrShowAppWindow();
   });
+
+  if (!app.isPackaged) {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      require('electron-reloader')(module, {
+        watchRenderer: true,
+        ignore: ['**/node_modules/**', '**/dist/**', '**/.git/**', '**/package-lock.json'],
+      });
+    } catch {
+      // electron-reloader is a devDependency; ignore if missing.
+    }
+  }
 }
 
 app.on('before-quit', () => {
