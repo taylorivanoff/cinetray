@@ -1,37 +1,37 @@
 {
-  "name": "media-renamer-tray",
-  "description": "System tray app that renames TV and movie files automatically using TMDB.",
+  "name": "cinetray",
+  "description": "System tray app that auto-renames and organizes movie & TV files using TMDB — Plex-compatible naming, folder watching, dry run.",
   "author": {
     "name": "Taylor Ivanoff"
   },
   "version": "1.0.10",
-  "repository": "https://github.com/taylorivanoff/tidy-tray",
-  "main": "dist/main/main.js",
+  "repository": "https://github.com/taylorivanoff/cinetray",
+  "main": "main/main.js",
   "scripts": {
-    "build": "tsc",
-    "start": "npm run build && electron .",
+    "start": "electron .",
+    "dev": "electron .",
     "bump": "node scripts/bump-version.js",
-    "clean:release": "node -e \"const fs=require('fs'); for (const d of ['dist/win-unpacked','dist/mac','dist/mac-arm64','dist/linux-unpacked']) { try { fs.rmSync(d,{recursive:true}); } catch (e) { if (e.code!=='ENOENT'&&e.code!=='EPERM'&&e.code!=='EBUSY') throw e; } }\"",
-    "release": "npm run build && npm run clean:release && electron-builder --publish=never"
+    "release": "electron-builder --publish=never"
   },
   "build": {
-    "appId": "io.github.taylorivanoff.media-renamer-tray",
-    "productName": "Tidy Tray",
+    "appId": "io.github.taylorivanoff.cinetray",
+    "productName": "CineTray",
     "files": [
-      "dist/**/*",
+      "main/**/*",
+      "preload/**/*",
+      "renderer/**/*",
       "resources/**/*",
-      "src/renderer/**/*",
-      "package.json",
-      "installer.nsh"
+      "package.json"
     ],
+    "directories": {
+      "output": "dist"
+    },
     "win": {
       "icon": "resources/icon.png",
-      "target": "nsis"
+      "target": "nsis",
+      "artifactName": "${name}-Setup-${version}.${ext}"
     },
-    "nsis": {
-      "oneClick": true,
-      "include": "installer.nsh"
-    },
+    "afterPack": "./scripts/after-pack.js",
     "mac": {
       "icon": "resources/icon.png",
       "target": [
@@ -42,18 +42,25 @@
       "hardenedRuntime": true,
       "gatekeeperAssess": false
     },
-    "afterPack": "./scripts/after-pack.js"
+    "nsis": {
+      "oneClick": true,
+      "include": "installer.nsh",
+      "deleteAppDataOnUninstall": true
+    },
+    "publish": {
+      "provider": "generic",
+      "url": "https://github.com/taylorivanoff/cinetray/releases/latest/download"
+    }
   },
   "dependencies": {
     "chokidar": "^4.0.3",
-    "electron-store": "^8.2.0"
+    "electron-store": "^8.2.0",
+    "electron-tray-base": "file:../electron-tray-base",
+    "electron-updater": "^6.8.9"
   },
   "devDependencies": {
-    "@types/chokidar": "^1.7.5",
-    "@types/node": "^20.19.43",
     "electron": "^43.2.0",
     "electron-builder": "^26.15.3",
-    "electron-reloader": "^1.2.3",
-    "typescript": "^5.9.3"
+    "electron-reloader": "^1.2.3"
   }
 }

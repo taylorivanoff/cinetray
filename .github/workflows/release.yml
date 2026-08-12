@@ -89,11 +89,8 @@ jobs:
           echo "commits<<EOF" >> $GITHUB_OUTPUT
           echo "$COMMITS" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-      - run: npm ci
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
 
       - name: Configure Windows code signing
         if: runner.os == 'Windows'
@@ -109,7 +106,7 @@ jobs:
           } else {
             Write-Host "No WIN_CSC_LINK secret - building unsigned."
           }
-      - run: npm run release -- ${{ matrix.args }}
+      - run: bun run release -- ${{ matrix.args }}
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ needs.check-version.outputs.version }}

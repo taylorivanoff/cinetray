@@ -1,20 +1,10 @@
-import fs from 'fs/promises';
-import path from 'path';
-import type { Dirent } from 'fs';
-import type { AppSettings } from '../types';
+const fs = require('fs/promises');
+const path = require('path');
 
-/**
- * Recursively find media files in dir up to maxDepth (1 = top-level only, 2 = one subdir).
- */
-async function findMediaFiles(
-  dir: string,
-  exts: Set<string>,
-  maxDepth: number,
-  currentDepth: number
-): Promise<string[]> {
+async function findMediaFiles(dir, exts, maxDepth, currentDepth) {
   if (currentDepth > maxDepth) return [];
-  const out: string[] = [];
-  let entries: Dirent[];
+  const out = [];
+  let entries;
   try {
     entries = await fs.readdir(dir, { withFileTypes: true });
   } catch {
@@ -33,13 +23,14 @@ async function findMediaFiles(
   return out;
 }
 
-export async function getFilesToProcess(settings: AppSettings): Promise<string[]> {
+async function getFilesToProcess(settings) {
   const exts = new Set(settings.mediaExtensions.map((e) => e.toLowerCase()));
-  const all: string[] = [];
+  const all = [];
   for (const watchPath of settings.watchPaths) {
-    // Use a deeper scan so already-recursed folders from earlier runs get fixed.
     const files = await findMediaFiles(watchPath, exts, 5, 0);
     all.push(...files);
   }
   return all;
 }
+
+module.exports = { getFilesToProcess };

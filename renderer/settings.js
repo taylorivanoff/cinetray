@@ -17,12 +17,12 @@
   const dryRunEl = document.getElementById('dryRun');
   const saveBtn = document.getElementById('save');
   const saveStatus = document.getElementById('saveStatus');
-  const runManualBtn = document.getElementById('runManual');
-  const runManualStatus = document.getElementById('runManualStatus');
 
-  function setStatus(el, text, isError) {
-    el.textContent = text;
-    el.className = 'status' + (text ? (isError ? ' err' : ' ok') : '');
+  function setStatus(el, text, kind) {
+    if (!el) return;
+    el.textContent = text || '';
+    el.className = (el.classList.contains('panel-meta') ? 'panel-meta' : 'field-status')
+      + (kind ? ` ${kind}` : '');
   }
 
   function updatePollingVisibility() {
@@ -47,6 +47,7 @@
       const removeBtn = document.createElement('button');
       removeBtn.textContent = 'Remove';
       removeBtn.type = 'button';
+      removeBtn.className = 'text-btn';
       removeBtn.addEventListener('click', async () => {
         const next = paths.filter((_, j) => j !== i);
         await api.setSettings({ watchPaths: next });
@@ -66,10 +67,11 @@
     movieTemplateEl.value = s.movieTemplate || '';
     watcherEnabledEl.checked = s.watcherEnabled !== false;
     usePollingEl.checked = !!s.usePolling;
-    pollingIntervalMsEl.value = String(s.pollingIntervalMs ?? 2000);
+    pollingIntervalMsEl.value = String(s.pollingIntervalMs ?? 60000);
     dryRunEl.checked = !!s.dryRun;
     renderWatchPaths(s.watchPaths);
     updatePollingVisibility();
+    window.cineTrayUi?.refreshStatusBadge?.();
   }
 
   usePollingEl.addEventListener('change', updatePollingVisibility);
@@ -78,7 +80,7 @@
     const key = apiKeyEl.value.trim();
     setStatus(apiKeyStatus, 'Checking…');
     const ok = await api.testApiKey(key);
-    setStatus(apiKeyStatus, ok ? 'API key is valid' : 'Invalid API key', !ok);
+    setStatus(apiKeyStatus, ok ? 'API key is valid' : 'Invalid API key', ok ? 'ok' : 'err');
   });
 
   addFolderBtn.addEventListener('click', async () => {
@@ -88,32 +90,13 @@
     const paths = [...(s.watchPaths || []), folder];
     await api.setSettings({ watchPaths: paths });
     renderWatchPaths(paths);
+    window.cineTrayUi?.refreshStatusBadge?.();
   });
 
   pickOutputBtn.addEventListener('click', async () => {
     const folder = await api.selectFolder();
     if (folder) outputPathEl.value = folder;
   });
-
-  // Optional (the combined App page may not include a separate `runManual` button).
-  if (runManualBtn && runManualStatus) {
-    runManualBtn.addEventListener('click', async () => {
-      runManualBtn.disabled = true;
-      setStatus(runManualStatus, 'Processing…');
-      try {
-        const result = await api.runManual();
-        setStatus(
-          runManualStatus,
-          `Done: ${result.processed} processed, ${result.errors} error(s). Console shows the changes.`,
-          result.errors > 0
-        );
-      } catch (e) {
-        setStatus(runManualStatus, 'Error: ' + (e && e.message ? e.message : 'Unknown'), true);
-      }
-      runManualBtn.disabled = false;
-      setTimeout(() => setStatus(runManualStatus, ''), 5000);
-    });
-  }
 
   saveBtn.addEventListener('click', async () => {
     const paths = [];
@@ -129,10 +112,11 @@
       movieTemplate: movieTemplateEl.value.trim(),
       watcherEnabled: watcherEnabledEl.checked,
       usePolling: usePollingEl.checked,
-      pollingIntervalMs: isNaN(interval) || interval < 500 ? 2000 : Math.min(60000, interval),
+      pollingIntervalMs: isNaN(interval) || interval < 500 ? 60000 : Math.min(60000, interval),
       dryRun: dryRunEl.checked,
     });
-    setStatus(saveStatus, 'Saved');
+    setStatus(saveStatus, 'Saved', 'ok');
+    window.cineTrayUi?.refreshStatusBadge?.();
     setTimeout(() => setStatus(saveStatus, ''), 2000);
   });
 

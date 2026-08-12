@@ -1,10 +1,10 @@
-import fs from 'fs/promises';
+const fs = require('fs/promises');
 
-function delay(ms: number): Promise<void> {
+function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function canOpenForRead(filePath: string): Promise<boolean> {
+async function canOpenForRead(filePath) {
   try {
     const fh = await fs.open(filePath, 'r');
     await fh.close();
@@ -14,19 +14,12 @@ async function canOpenForRead(filePath: string): Promise<boolean> {
   }
 }
 
-/**
- * Wait until the file is readable and its size is stable across two checks.
- * This helps avoid renaming files that are still being copied/written.
- */
-export async function waitForFileReady(
-  filePath: string,
-  opts?: { timeoutMs?: number; intervalMs?: number }
-): Promise<boolean> {
+async function waitForFileReady(filePath, opts) {
   const timeoutMs = opts?.timeoutMs ?? 60_000;
   const intervalMs = opts?.intervalMs ?? 1_000;
 
   const start = Date.now();
-  let prevSize: number | null = null;
+  let prevSize = null;
   let stableReads = 0;
 
   while (Date.now() - start < timeoutMs) {
@@ -47,7 +40,6 @@ export async function waitForFileReady(
       }
       prevSize = st.size;
 
-      // Stable for 2 consecutive size checks.
       if (stableReads >= 1) return true;
     } catch {
       prevSize = null;
@@ -60,3 +52,4 @@ export async function waitForFileReady(
   return false;
 }
 
+module.exports = { waitForFileReady };

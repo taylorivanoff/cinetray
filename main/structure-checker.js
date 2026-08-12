@@ -1,27 +1,16 @@
-import fs from 'fs/promises';
-import path from 'path';
-import type { AppSettings } from '../types';
+const fs = require('fs/promises');
+const path = require('path');
 
-const MEDIA_EXTS = new Set(['mkv', 'mp4', 'avi', 'mov', 'wmv', 'm4v', 'webm']);
-
-export interface StructureIssue {
-  kind: 'recurring_folder' | 'invalid_tv_path' | 'invalid_movie_path';
-  filePath: string;
-  message: string;
-}
-
-/** Movie: Title (YYYY).ext at root or one level */
-function isValidMoviePath(relativePath: string): boolean {
+function isValidMoviePath(relativePath) {
   const normalized = relativePath.replace(/\\/g, '/');
   const parts = normalized.split('/').filter(Boolean);
   const file = parts[parts.length - 1];
   return Boolean(file.match(/^.+\s\(\d{4}\)\.\w+$/i) || file.match(/^.+\s\(\d{4}\)\s*\(\d+\)\.\w+$/i));
 }
 
-/** Detect if path has the same folder name repeated (e.g. Show/Show/Season 01) */
-function hasRecurringFolder(relativePath: string): boolean {
+function hasRecurringFolder(relativePath) {
   const parts = relativePath.replace(/\\/g, '/').split('/').filter(Boolean);
-  const seen = new Set<string>();
+  const seen = new Set();
   for (const p of parts) {
     const lower = p.toLowerCase();
     if (seen.has(lower)) return true;
@@ -30,16 +19,9 @@ function hasRecurringFolder(relativePath: string): boolean {
   return false;
 }
 
-async function collectMediaFiles(
-  dir: string,
-  baseDir: string,
-  exts: Set<string>,
-  maxDepth: number,
-  depth: number,
-  out: string[]
-): Promise<void> {
+async function collectMediaFiles(dir, baseDir, exts, maxDepth, depth, out) {
   if (depth > maxDepth) return;
-  let entries: { name: string; isFile: () => boolean; isDirectory: () => boolean }[];
+  let entries;
   try {
     entries = await fs.readdir(dir, { withFileTypes: true });
   } catch {
@@ -57,15 +39,12 @@ async function collectMediaFiles(
   }
 }
 
-export async function runStructureCheck(
-  outputPath: string,
-  settings: AppSettings
-): Promise<StructureIssue[]> {
-  const issues: StructureIssue[] = [];
+async function runStructureCheck(outputPath, settings) {
+  const issues = [];
   const exts = new Set(settings.mediaExtensions.map((e) => e.toLowerCase()));
   if (!outputPath) return issues;
 
-  let dir: string;
+  let dir;
   try {
     const stat = await fs.stat(outputPath);
     if (!stat.isDirectory()) return issues;
@@ -74,7 +53,7 @@ export async function runStructureCheck(
     return issues;
   }
 
-  const files: string[] = [];
+  const files = [];
   await collectMediaFiles(dir, dir, exts, 5, 0, files);
 
   for (const rel of files) {
@@ -82,7 +61,7 @@ export async function runStructureCheck(
       issues.push({
         kind: 'recurring_folder',
         filePath: path.join(dir, rel),
-        message: `Recurring folder name in path: ${rel}`,
+        message: `Recurring folder name in path: ${rel}`
       });
     }
     const parts = rel.replace(/\\/g, '/').split('/').filter(Boolean);
@@ -90,10 +69,12 @@ export async function runStructureCheck(
       issues.push({
         kind: 'invalid_movie_path',
         filePath: path.join(dir, rel),
-        message: `Root file does not match movie pattern (Title (Year).ext): ${rel}`,
+        message: `Root file does not match movie pattern (Title (Year).ext): ${rel}`
       });
     }
   }
 
   return issues;
 }
+
+module.exports = { runStructureCheck };

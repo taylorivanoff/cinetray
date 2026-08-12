@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CineTray</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="titlebar">
+      <div class="titlebar-drag">
+        <h1 class="app-title">CineTray</h1>
+        <span class="status-badge pending" id="status-badge">Starting…</span>
+      </div>
+      <div class="titlebar-actions">
+        <button type="button" class="text-btn" id="btn-debug" title="Toggle console log" aria-pressed="false">Debug</button>
+        <button type="button" class="text-btn" id="runStructureCheck">Check structure</button>
+        <button type="button" class="text-btn primary" id="runManualActions">Process now</button>
+      </div>
+    </header>
+
+    <div class="progress-bar hidden" id="progress-bar">
+      <span class="progress-text" id="progress-text"></span>
+    </div>
+
+    <aside class="log-panel hidden" id="log-panel" aria-label="Application log" hidden></aside>
+
+    <main class="workspace">
+      <section class="panel console-panel">
+        <header class="panel-header">
+          <h2>Console</h2>
+          <span class="panel-meta" id="runManualStatusActions"></span>
+        </header>
+        <div id="console-out" class="console-out"></div>
+      </section>
+
+      <section class="panel settings-panel">
+        <header class="panel-header">
+          <h2>Settings</h2>
+          <span class="panel-meta" id="saveStatus"></span>
+        </header>
+
+        <div class="settings-scroll">
+          <p class="hint settings-intro">
+            Data from <a href="https://www.themoviedb.org" target="_blank" rel="noopener">The Movie Database (TMDB)</a>.
+            Get a free API key in your account settings.
+          </p>
+
+          <section class="settings-section">
+            <h3 class="settings-section-title">API</h3>
+            <div class="settings-section-body">
+              <label class="field">
+                <span>TMDB API Key</span>
+                <div class="inline-row">
+                  <input type="password" id="apiKey" placeholder="Your API key" autocomplete="off" />
+                  <button type="button" id="testKey" class="text-btn">Test</button>
+                </div>
+                <span id="apiKeyStatus" class="field-status"></span>
+              </label>
+            </div>
+          </section>
+
+          <section class="settings-section">
+            <h3 class="settings-section-title">Folders</h3>
+            <div class="settings-section-body">
+              <label class="field">
+                <span>Watch folders</span>
+                <ul id="watchPaths" class="watch-paths"></ul>
+                <button type="button" id="addFolder" class="text-btn">Add folder</button>
+              </label>
+              <label class="field">
+                <span>Output folder</span>
+                <div class="inline-row">
+                  <input type="text" id="outputPath" placeholder="Leave empty to use watch folder" spellcheck="false" />
+                  <button type="button" id="pickOutput" class="text-btn">Browse</button>
+                </div>
+                <span class="help">Where organized files are written. Defaults to each watch folder root.</span>
+              </label>
+            </div>
+          </section>
+
+          <section class="settings-section">
+            <h3 class="settings-section-title">Templates</h3>
+            <div class="settings-section-body templates-grid">
+              <label class="field">
+                <span>TV filename</span>
+                <input type="text" id="tvTemplate" placeholder="{show}/Season {s}/{show} - S{s}E{e} - {title}.{ext}" spellcheck="false" />
+                <span class="help">{show}, {s}, {e}, {title}, {ext}</span>
+              </label>
+              <label class="field">
+                <span>Movie filename</span>
+                <input type="text" id="movieTemplate" placeholder="{title} ({year}).{ext}" spellcheck="false" />
+                <span class="help">{title}, {year}, {ext}</span>
+              </label>
+            </div>
+          </section>
+
+          <section class="settings-section">
+            <h3 class="settings-section-title">Options</h3>
+            <div class="settings-section-body">
+              <label class="toggle-row">
+                <span>Enable folder watching</span>
+                <input type="checkbox" id="watcherEnabled" checked />
+              </label>
+              <label class="toggle-row">
+                <span>Use polling (for network drives)</span>
+                <input type="checkbox" id="usePolling" checked />
+              </label>
+              <div class="option-nested" id="pollingIntervalSection">
+                <label class="field">
+                  <span>Polling interval (ms)</span>
+                  <input type="number" id="pollingIntervalMs" min="500" max="60000" step="500" placeholder="60000" />
+                  <span class="help">How often to scan watch folders. 500–60000 ms.</span>
+                </label>
+              </div>
+              <label class="toggle-row">
+                <span>Dry run (log only, don't move files)</span>
+                <input type="checkbox" id="dryRun" />
+              </label>
+            </div>
+          </section>
+
+          <footer class="settings-footer">
+            <button type="button" id="save" class="text-btn primary">Save settings</button>
+            <span id="runStructureStatus" class="field-status"></span>
+          </footer>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script src="settings.js"></script>
+</body>
+</html>

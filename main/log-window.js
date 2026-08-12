@@ -1,19 +1,19 @@
-import { app, BrowserWindow, ipcMain, type WebContents } from 'electron';
-import path from 'path';
-import { getLogs, setOnNewEntry } from './logger';
+const { BrowserWindow, ipcMain } = require('electron');
+const path = require('path');
+const { getLogs, setOnNewEntry } = require('./logger');
 
-let logWindow: BrowserWindow | null = null;
+let logWindow = null;
 
-const logSinks = new Set<WebContents>();
+const logSinks = new Set();
 let streamingInitialized = false;
 
-function sendToSinks(channel: string, ...args: unknown[]): void {
+function sendToSinks(channel, ...args) {
   for (const sink of logSinks) {
     if (!sink.isDestroyed()) sink.send(channel, ...args);
   }
 }
 
-export function initLogStreaming(): void {
+function initLogStreaming() {
   if (streamingInitialized) return;
   streamingInitialized = true;
 
@@ -29,11 +29,11 @@ export function initLogStreaming(): void {
   });
 }
 
-export function getLogWindow(): BrowserWindow | null {
+function getLogWindow() {
   return logWindow;
 }
 
-export function createOrShowLogWindow(): void {
+function createOrShowLogWindow() {
   initLogStreaming();
   if (logWindow && !logWindow.isDestroyed()) {
     logWindow.show();
@@ -41,21 +41,20 @@ export function createOrShowLogWindow(): void {
     return;
   }
 
-  const appPath = app.getAppPath();
   const preloadPath = path.join(__dirname, '..', 'preload', 'log-preload.js');
-  const logHtmlPath = path.join(appPath, 'src', 'renderer', 'log.html');
+  const logHtmlPath = path.join(__dirname, '..', 'renderer', 'log.html');
 
   logWindow = new BrowserWindow({
     width: 700,
     height: 400,
     minWidth: 400,
     minHeight: 200,
-    title: 'Tidy Tray – Console',
+    title: 'CineTray – Console',
     webPreferences: {
       preload: preloadPath,
       contextIsolation: true,
-      nodeIntegration: false,
-    },
+      nodeIntegration: false
+    }
   });
 
   logWindow.on('closed', () => {
@@ -64,3 +63,9 @@ export function createOrShowLogWindow(): void {
 
   logWindow.loadFile(logHtmlPath);
 }
+
+module.exports = {
+  initLogStreaming,
+  getLogWindow,
+  createOrShowLogWindow
+};
