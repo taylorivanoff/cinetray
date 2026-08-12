@@ -1,0 +1,26 @@
+[package]
+name = "cinetray"
+version = "1.0.15"
+description = "System tray app that auto-renames and organizes movie & TV files using TMDB — Plex-compatible naming, folder watching, dry run."
+authors = ["Taylor Ivanoff"]
+edition = "2021"
+
+[lib]
+name = "cinetray_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-opener = "2"
+tauri-plugin-autostart = "2"
+tauri-plugin-single-instance = "2"
+tauri-plugin-dialog = "2"
+tauri-tray-base = { path = "../../tauri-tray-base" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+parking_lot = "0.12"
+which = "7"
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"], optional = true }

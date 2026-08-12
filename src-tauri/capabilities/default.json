@@ -1,0 +1,15 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window and secondary console window",
+  "windows": ["main", "console"],
+  "permissions": [
+    "core:default",
+    "core:event:default",
+    "core:window:default",
+    "core:webview:allow-internal-toggle-devtools",
+    "opener:default",
+    "autostart:default",
+    "dialog:default"
+  ]
+}

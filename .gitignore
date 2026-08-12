@@ -9,3 +9,6 @@ Thumbs.db
 .env.local
 *.local
 .release-staging/
+
+src-tauri/target/
+src-tauri/gen/

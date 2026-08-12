@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'">
   <title>CineTray – Console</title>
   <style>
     * { box-sizing: border-box; }
@@ -32,6 +32,8 @@
 </head>
 <body>
   <div id="out"></div>
+  <script src="vendor/tauri-tray-bridge.js"></script>
+  <script src="log-bridge.js"></script>
   <script>
     const out = document.getElementById('out');
     function addLine(entry) {
