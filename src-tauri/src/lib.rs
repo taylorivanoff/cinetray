@@ -9,7 +9,7 @@ use serde_json::{json, Map};
 use tauri::{Listener, Manager};
 use tauri_tray_base::{
     apply_window_settings, install_state, set_on_before_quit, setup_tray, sync_autostart,
-    was_launched_minimised, TrayBaseOptions, TrayExtraItem, TraySetupOptions,
+    TrayBaseOptions, TrayExtraItem, TraySetupOptions,
 };
 
 pub struct AppRuntime {
@@ -128,10 +128,6 @@ pub fn run() {
             set_on_before_quit(app.handle(), move || {
                 host_for_quit.lock().shutdown();
             });
-
-            if was_launched_minimised() {
-                tauri_tray_base::hide_main(app.handle());
-            }
 
             Ok(())
         })

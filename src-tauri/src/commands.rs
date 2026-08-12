@@ -76,6 +76,8 @@ pub fn open_console_window(app: &AppHandle) -> Result<(), String> {
         .title("CineTray – Console")
         .inner_size(700.0, 400.0)
         .min_inner_size(400.0, 200.0)
+        .visible(false)
+        .on_page_load(tauri_tray_base::reveal_webview_when_ready())
         .build()
         .map_err(|e| e.to_string())?;
     Ok(())
