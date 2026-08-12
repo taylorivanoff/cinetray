@@ -23,25 +23,37 @@ jobs:
       - id: check
         run: |
           set -e
-          # README-only pushes should not bump version or cut a release
+          # Only source and package files should bump version or cut a release.
+          # Docs, README, CI config, licenses, etc. are ignored.
           if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
             CHANGED=$(git diff --name-only HEAD^ HEAD)
           else
             CHANGED=$(git show --pretty="" --name-only HEAD)
           fi
 
-          NON_README=""
+          is_release_relevant() {
+            case "$1" in
+              package.json|package-lock.json|bun.lock|bun.lockb|yarn.lock|pnpm-lock.yaml)
+                return 0
+                ;;
+              *.js|*.mjs|*.cjs|*.ts|*.tsx)
+                return 0
+                ;;
+            esac
+            return 1
+          }
+
+          SHOULD_RELEASE=false
           while IFS= read -r file; do
             [ -z "$file" ] && continue
-            base=$(basename "$file")
-            if [[ ! "$base" =~ ^[Rr][Ee][Aa][Dd][Mm][Ee].*\.[Mm][Dd]$ ]]; then
-              NON_README=1
+            if is_release_relevant "$file"; then
+              SHOULD_RELEASE=true
               break
             fi
           done <<< "$CHANGED"
 
-          if [ -n "$CHANGED" ] && [ -z "$NON_README" ]; then
-            echo "README-only change; skipping version bump and release"
+          if [ "$SHOULD_RELEASE" != true ]; then
+            echo "Only docs/metadata changed; skipping version bump and release"
             echo "should_release=false" >> "$GITHUB_OUTPUT"
             echo "version=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
             echo "ref=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
