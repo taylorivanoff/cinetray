@@ -80,6 +80,11 @@
     const key = apiKeyEl.value.trim();
     setStatus(apiKeyStatus, 'Checking…');
     const ok = await api.testApiKey(key);
+    if (ok && key) {
+      await api.setSettings({ apiKey: key });
+      apiKeyEl.blur();
+      window.cineTrayUi?.refreshStatusBadge?.();
+    }
     setStatus(apiKeyStatus, ok ? 'API key is valid' : 'Invalid API key', ok ? 'ok' : 'err');
   });
 

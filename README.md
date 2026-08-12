@@ -1,27 +1,27 @@
-# CineTray — Automatic Movie & TV File Renamer
+# CineTray
+
+**Automatic movie & TV file renamer for Plex, Jellyfin, and Kodi**
 
 [![Release](https://img.shields.io/github/v/release/taylorivanoff/cinetray)](https://github.com/taylorivanoff/cinetray/releases)
 [![Downloads](https://img.shields.io/github/downloads/taylorivanoff/cinetray/total)](https://github.com/taylorivanoff/cinetray/releases)
 [![License](https://img.shields.io/github/license/taylorivanoff/cinetray)](LICENSE)
 
-**CineTray** is a cross-platform **media file renamer** that automatically organizes movie and TV show files using [The Movie Database (TMDB)](https://www.themoviedb.org). It runs from the system tray, watches download folders, matches filenames to TMDB metadata, and moves files into Plex-compatible show/season or movie folders — a lightweight FileBot alternative for Plex, Jellyfin, and Kodi libraries.
+CineTray is a lightweight **FileBot alternative** that runs in your system tray, watches download folders, and automatically renames and organizes movie and TV files using [The Movie Database (TMDB)](https://www.themoviedb.org). Match messy release names to proper titles, sort into Plex-compatible folders, and log every change — without scripts or a heavy media manager.
 
-One combined app window covers sync actions, settings, and a live console. Supports automatic watching and one-click manual processing.
+One window covers settings, sync actions, and a live console. Turn on the folder watcher for hands-off processing, or click **Process now** for a manual backfill.
 
 ## Features
 
-- Combined app window: console, settings, and sync actions in one place
-- Status badge in the titlebar (Watching, Dry run, No API key, No folders, …)
-- **Process now** and **Check structure** from the titlebar
-- Toggleable **Debug** log strip (like GhStats)
-- Tray icon with **Process watch folders** and **Show console**
-- Close hides to tray (Quit from tray menu)
-- Auto processing enabled by default (watcher + 60s polling)
-- Manual processing for backfills and cleanup
-- Non-locked file safety: waits until files are readable and size-stable
-- Template-based TV and movie output paths
-- Dry run mode: preview changes without moving files
-- Recurring-folder recovery: detects recursive paths, reprocesses affected files
+- **Background folder watching** — auto-processes new downloads (60s polling by default)
+- **Plex-compatible output** — configurable TV and movie filename templates
+- **TMDB lookup** — resolves show, season, episode, and movie metadata
+- **Dry run mode** — preview renames without moving files
+- **File-ready safety** — skips locked or in-progress downloads until stable
+- **Structure checker** — finds naming/layout issues in your library folders
+- **System tray app** — close hides to tray; quick access to process and console
+- **Combined UI** — console, settings, and actions in one place
+- **Debug log strip** — toggle a compact log panel above the console
+- **Windows startup** — optional auto-launch on login (disable in Settings → Apps → Startup)
 
 ## Screenshots
 
@@ -31,67 +31,48 @@ Main app window:
 
 ## What It Does
 
-- Watches your incoming folders for media files (`.mkv`, `.mp4`, `.avi`, etc.)
-- Detects TV episodes and movies from filenames
-- Looks up proper titles/episode names in TMDB
-- Renames/moves files using your templates
-- Logs every action in the embedded console
+1. Watches incoming folders for media files (`.mkv`, `.mp4`, `.avi`, `.mov`, `.wmv`, `.m4v`, `.webm`)
+2. Parses TV episodes and movies from common release-name patterns
+3. Looks up titles and episode names in TMDB
+4. Renames and moves files using your templates
+5. Logs every action in the embedded console
 
-Examples:
+**Example output**
 
 - TV: `Show Name/Season 01/Show Name - S01E05 - Episode Title.mkv`
 - Movie: `Movie Name (2024).mkv`
 
 ## Requirements
 
+- Windows or macOS
 - A free [TMDB API key](https://www.themoviedb.org/settings/api)
 
 ## Installation
 
 ### Windows
 
-1. Download the latest installer from [Releases](https://github.com/taylorivanoff/cinetray/releases)
-2. Run the installer and follow the prompts
+1. Download `cinetray-Setup-<version>.exe` from [Releases](https://github.com/taylorivanoff/cinetray/releases)
+2. Run the installer
 
 ### macOS
 
 1. Download the `.dmg` from [Releases](https://github.com/taylorivanoff/cinetray/releases) and drag **CineTray** to Applications
-2. macOS may say the app is “damaged” — that is Gatekeeper blocking an unsigned download, not a bad file. Go to System Preferences → Security & Privacy, then “Open anyway”.
-
-## Development
-
-```bash
-npm install
-npm start
-```
-
-Or with Bun:
-
-```bash
-bun install
-bun start
-```
-
-### Building
-
-```bash
-npm run release
-```
+2. If macOS blocks the app as “damaged”, open **System Settings → Privacy & Security** and click **Open Anyway** — this is Gatekeeper on an unsigned build, not a corrupt file
 
 ## Usage
 
-1. Launch CineTray from the tray icon (the window opens automatically on first run if the API key or watch folders are missing)
-2. Add your TMDB API key and click **Test**
+1. Launch CineTray (the window opens on first run if the API key or watch folders are missing)
+2. Add your TMDB API key and click **Test** — if the key is valid, it is saved automatically and the field loses focus
 3. Add one or more watch folders
-4. Optionally set an output folder (leave blank to organize from watch roots)
-5. Review templates and click **Save settings**
+4. Optionally set an output folder (leave blank to organize in place under each watch root)
+5. Review templates and click **Save settings** (for watch folders, templates, and other options — the API key does not need a separate save after a successful test)
 6. Click **Process now** for a manual scan, or let the watcher handle new files
-7. Click **Debug** to show or hide the compact log strip above the console
+7. Click **Debug** to show or hide the compact log strip
 8. Use **Check structure** to scan output folders for naming/layout issues
 
 ### Processing modes
 
-**Automatic** — triggered by new/changed files in watch folders. Uses polling (default 60 seconds). Skips files that appear locked/in-progress and retries on later events.
+**Automatic** — triggered by new or changed files in watch folders. Uses polling (default 60 seconds). Skips files that appear locked or in-progress and retries on later events.
 
 **Manual** — runs a deeper scan of watch folders. Useful for backfills and cleanup. Performs pre-scan structure checks and logs findings.
 
@@ -124,6 +105,40 @@ Supported placeholders:
 - TV: `{show}`, `{s}`, `{e}`, `{title}`, `{ext}`
 - Movie: `{title}`, `{year}`, `{ext}`
 
+## Upgrading from Tidy Tray
+
+CineTray is the new name for Tidy Tray. If you used the old app:
+
+1. Install CineTray from [Releases](https://github.com/taylorivanoff/cinetray/releases) — in-place auto-update from Tidy Tray is not supported because the app ID changed
+2. Your settings (API key, watch folders, templates) migrate automatically from `%AppData%\Tidy Tray\` on first launch
+3. Uninstall Tidy Tray when you're satisfied everything works
+
+The old repo redirects here: [github.com/taylorivanoff/cinetray](https://github.com/taylorivanoff/cinetray)
+
+## Development
+
+```bash
+git clone https://github.com/taylorivanoff/cinetray.git
+cd cinetray
+npm install
+npm start
+```
+
+Or with Bun:
+
+```bash
+bun install
+bun start
+```
+
+### Building
+
+```bash
+npm run release
+```
+
+Build artifacts land in `dist/`. Packaged builds check for updates from GitHub Releases.
+
 ## Tech Stack
 
 - [Electron](https://www.electronjs.org/)
@@ -131,10 +146,6 @@ Supported placeholders:
 - [TMDB API](https://www.themoviedb.org/documentation/api)
 - [chokidar](https://github.com/paulmillr/chokidar)
 - [electron-store](https://github.com/sindresorhus/electron-store)
-
-## Keywords
-
-movie file renamer, TV show renamer, TMDB media organizer, Plex file naming, Jellyfin media sorter, download folder organizer, system tray media tools, FileBot alternative, automatic media renamer, download folder watcher
 
 ## Attribution
 
