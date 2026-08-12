@@ -55,7 +55,7 @@
   "dependencies": {
     "chokidar": "^4.0.3",
     "electron-store": "^8.2.0",
-    "electron-tray-base": "file:../electron-tray-base",
+    "electron-tray-base": "github:taylorivanoff/electron-tray-base",
     "electron-updater": "^6.8.9"
   },
   "devDependencies": {

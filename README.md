@@ -134,10 +134,14 @@ bun start
 ### Building
 
 ```bash
-npm run release
+bun run release
 ```
 
 Build artifacts land in `dist/`. Packaged builds check for updates from GitHub Releases.
+
+### Releasing
+
+Push to `master`. The GitHub Actions workflow auto-bumps the patch version when needed, builds Windows and macOS installers, uploads updater metadata, and creates a GitHub Release. README-only commits skip the bump and release.
 
 ## Tech Stack
 
