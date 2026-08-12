@@ -1,6 +1,13 @@
 const { app, ipcMain, dialog } = require('electron');
 const path = require('path');
-const { run } = require('electron-tray-base');
+const loadElectronTrayBase = require('./load-electron-tray-base');
+const { configureAppIsolation, run } = loadElectronTrayBase();
+
+configureAppIsolation({
+  appId: 'io.github.taylorivanoff.cinetray',
+  appName: 'CineTray'
+});
+
 const { settingsStore, getSettings, setSettings } = require('./store');
 const { startWatcher, stopWatcher } = require('./watcher');
 const { processFile } = require('./renamer');
