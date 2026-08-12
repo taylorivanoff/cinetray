@@ -10,6 +10,8 @@ CineTray is a lightweight **FileBot alternative** that runs in your system tray,
 
 One window covers settings, sync actions, and a live console. Turn on the folder watcher for hands-off processing, or click **Process now** for a manual backfill.
 
+<img width="1089" height="738" alt="{CD67F336-AC4D-43EB-9E60-F4C6999802C7}" src="https://github.com/user-attachments/assets/03dbfac7-a4aa-4de4-8690-bff3ea118a96" />
+
 ## Features
 
 - **Background folder watching** — auto-processes new downloads (60s polling by default)
@@ -21,12 +23,6 @@ One window covers settings, sync actions, and a live console. Turn on the folder
 - **System tray app** — close hides to tray; quick access to process and console
 - **Combined UI** — console, settings, and actions in one place
 - **Windows startup** — optional auto-launch on login (disable in Settings → Apps → Startup)
-
-## Screenshots
-
-Main app window:
-
-![CineTray main window](docs/images/main-window.png)
 
 ## What It Does
 
