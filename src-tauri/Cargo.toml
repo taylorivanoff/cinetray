@@ -1,6 +1,6 @@
 [package]
 name = "cinetray"
-version = "1.0.19"
+version = "1.0.20"
 description = "System tray app that auto-renames and organizes movie & TV files using TMDB — Plex-compatible naming, folder watching, dry run."
 authors = ["Taylor Ivanoff"]
 edition = "2021"
