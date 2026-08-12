@@ -11,18 +11,43 @@
   const pickOutputBtn = document.getElementById('pickOutput');
   const tvTemplateEl = document.getElementById('tvTemplate');
   const movieTemplateEl = document.getElementById('movieTemplate');
-  const watcherEnabledEl = document.getElementById('watcherEnabled');
   const usePollingEl = document.getElementById('usePolling');
-  const pollingIntervalMsEl = document.getElementById('pollingIntervalMs');
+  const pollingIntervalSecondsEl = document.getElementById('pollingIntervalSeconds');
   const dryRunEl = document.getElementById('dryRun');
-  const saveBtn = document.getElementById('save');
   const saveStatus = document.getElementById('saveStatus');
+
+  let isLoading = false;
+  let saveFlashTimer = null;
 
   function setStatus(el, text, kind) {
     if (!el) return;
     el.textContent = text || '';
     el.className = (el.classList.contains('panel-meta') ? 'panel-meta' : 'field-status')
       + (kind ? ` ${kind}` : '');
+  }
+
+  function normalizePollingIntervalSeconds(value) {
+    const interval = parseInt(value, 10);
+    if (!Number.isFinite(interval) || interval < 1) return 60;
+    return Math.min(3600, interval);
+  }
+
+  function flashSaved() {
+    setStatus(saveStatus, 'Saved', 'ok');
+    if (saveFlashTimer) clearTimeout(saveFlashTimer);
+    saveFlashTimer = setTimeout(() => {
+      saveFlashTimer = null;
+      setStatus(saveStatus, '');
+    }, 1500);
+  }
+
+  async function persistSettings(partial) {
+    if (isLoading) return;
+    try {
+      await api.setSettings(partial);
+      flashSaved();
+      window.cineTrayUi?.refreshStatusBadge?.();
+    } catch (_) {}
   }
 
   function updatePollingVisibility() {
@@ -50,8 +75,8 @@
       removeBtn.className = 'text-btn';
       removeBtn.addEventListener('click', async () => {
         const next = paths.filter((_, j) => j !== i);
-        await api.setSettings({ watchPaths: next });
-        loadSettings();
+        await persistSettings({ watchPaths: next });
+        renderWatchPaths(next);
       });
       li.appendChild(span);
       li.appendChild(removeBtn);
@@ -60,30 +85,61 @@
   }
 
   async function loadSettings() {
-    const s = await api.getSettings();
-    apiKeyEl.value = s.apiKey || '';
-    outputPathEl.value = s.outputPath || '';
-    tvTemplateEl.value = s.tvTemplate || '';
-    movieTemplateEl.value = s.movieTemplate || '';
-    watcherEnabledEl.checked = s.watcherEnabled !== false;
-    usePollingEl.checked = !!s.usePolling;
-    pollingIntervalMsEl.value = String(s.pollingIntervalMs ?? 60000);
-    dryRunEl.checked = !!s.dryRun;
-    renderWatchPaths(s.watchPaths);
-    updatePollingVisibility();
-    window.cineTrayUi?.refreshStatusBadge?.();
+    isLoading = true;
+    try {
+      const s = await api.getSettings();
+      apiKeyEl.value = s.apiKey || '';
+      outputPathEl.value = s.outputPath || '';
+      tvTemplateEl.value = s.tvTemplate || '';
+      movieTemplateEl.value = s.movieTemplate || '';
+      usePollingEl.checked = !!s.usePolling;
+      pollingIntervalSecondsEl.value = String(s.pollingIntervalSeconds ?? 60);
+      dryRunEl.checked = !!s.dryRun;
+      renderWatchPaths(s.watchPaths);
+      updatePollingVisibility();
+      window.cineTrayUi?.refreshStatusBadge?.();
+    } finally {
+      isLoading = false;
+    }
   }
 
-  usePollingEl.addEventListener('change', updatePollingVisibility);
+  usePollingEl.addEventListener('change', () => {
+    updatePollingVisibility();
+    persistSettings({ usePolling: usePollingEl.checked });
+  });
+
+  dryRunEl.addEventListener('change', () => {
+    persistSettings({ dryRun: dryRunEl.checked });
+  });
+
+  for (const el of [outputPathEl, tvTemplateEl, movieTemplateEl]) {
+    el.addEventListener('change', () => {
+      const key = el.id === 'outputPath'
+        ? 'outputPath'
+        : el.id === 'tvTemplate'
+          ? 'tvTemplate'
+          : 'movieTemplate';
+      persistSettings({ [key]: el.value.trim() });
+    });
+  }
+
+  apiKeyEl.addEventListener('change', () => {
+    persistSettings({ apiKey: apiKeyEl.value.trim() });
+  });
+
+  pollingIntervalSecondsEl.addEventListener('change', () => {
+    const pollingIntervalSeconds = normalizePollingIntervalSeconds(pollingIntervalSecondsEl.value);
+    pollingIntervalSecondsEl.value = String(pollingIntervalSeconds);
+    persistSettings({ pollingIntervalSeconds });
+  });
 
   testKeyBtn.addEventListener('click', async () => {
     const key = apiKeyEl.value.trim();
     setStatus(apiKeyStatus, 'Checking…');
     const ok = await api.testApiKey(key);
     if (ok && key) {
-      await api.setSettings({ apiKey: key });
+      await persistSettings({ apiKey: key });
       apiKeyEl.blur();
-      window.cineTrayUi?.refreshStatusBadge?.();
     }
     setStatus(apiKeyStatus, ok ? 'API key is valid' : 'Invalid API key', ok ? 'ok' : 'err');
   });
@@ -93,36 +149,15 @@
     if (!folder) return;
     const s = await api.getSettings();
     const paths = [...(s.watchPaths || []), folder];
-    await api.setSettings({ watchPaths: paths });
+    await persistSettings({ watchPaths: paths });
     renderWatchPaths(paths);
-    window.cineTrayUi?.refreshStatusBadge?.();
   });
 
   pickOutputBtn.addEventListener('click', async () => {
     const folder = await api.selectFolder();
-    if (folder) outputPathEl.value = folder;
-  });
-
-  saveBtn.addEventListener('click', async () => {
-    const paths = [];
-    watchPathsList.querySelectorAll('li:not(.watch-paths-empty) span').forEach((span) => {
-      if (span.textContent) paths.push(span.textContent);
-    });
-    const interval = parseInt(pollingIntervalMsEl.value, 10);
-    await api.setSettings({
-      apiKey: apiKeyEl.value.trim(),
-      watchPaths: paths,
-      outputPath: outputPathEl.value.trim(),
-      tvTemplate: tvTemplateEl.value.trim(),
-      movieTemplate: movieTemplateEl.value.trim(),
-      watcherEnabled: watcherEnabledEl.checked,
-      usePolling: usePollingEl.checked,
-      pollingIntervalMs: isNaN(interval) || interval < 500 ? 60000 : Math.min(60000, interval),
-      dryRun: dryRunEl.checked,
-    });
-    setStatus(saveStatus, 'Saved', 'ok');
-    window.cineTrayUi?.refreshStatusBadge?.();
-    setTimeout(() => setStatus(saveStatus, ''), 2000);
+    if (!folder) return;
+    outputPathEl.value = folder;
+    await persistSettings({ outputPath: folder });
   });
 
   loadSettings();

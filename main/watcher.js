@@ -4,7 +4,7 @@ let watcher = null;
 
 function startWatcher(settings, onFileAdd) {
   stopWatcher();
-  if (!settings.watcherEnabled || settings.watchPaths.length === 0) return;
+  if (settings.watchPaths.length === 0) return;
 
   const exts = new Set(settings.mediaExtensions.map((e) => e.toLowerCase()));
   const opts = {
@@ -14,7 +14,7 @@ function startWatcher(settings, onFileAdd) {
   };
   if (settings.usePolling) {
     opts.usePolling = true;
-    opts.interval = Math.max(500, settings.pollingIntervalMs ?? 2000);
+    opts.interval = Math.max(500, (settings.pollingIntervalSeconds ?? 60) * 1000);
   }
   watcher = chokidar.watch(settings.watchPaths, opts);
 

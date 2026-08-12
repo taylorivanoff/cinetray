@@ -14,12 +14,6 @@
   const statusBadge = document.getElementById('status-badge');
   const progressBar = document.getElementById('progress-bar');
   const progressText = document.getElementById('progress-text');
-  const logPanel = document.getElementById('log-panel');
-  const btnDebug = document.getElementById('btn-debug');
-
-  let showDebugBar = false;
-  const logLines = [];
-  const MAX_LOG_LINES = 40;
 
   function setStatus(el, text, kind) {
     if (!el) return;
@@ -49,45 +43,6 @@
       .replace(/>/g, '&gt;');
   }
 
-  function appendLogLine(entry) {
-    if (!entry?.message) return;
-    const time = entry.time ? entry.time.slice(11, 19) : '';
-    logLines.push({ level: entry.level || 'info', text: `[${time}] ${entry.message}` });
-
-    while (logLines.length > MAX_LOG_LINES) logLines.shift();
-
-    if (showDebugBar && logPanel) {
-      logPanel.innerHTML = logLines.map((l) =>
-        `<div class="log-line ${l.level}">${escapeHtml(l.text)}</div>`
-      ).join('');
-      logPanel.scrollTop = logPanel.scrollHeight;
-    }
-  }
-
-  function renderDebugPanel() {
-    if (!showDebugBar || !logPanel) return;
-    logPanel.innerHTML = logLines.map((l) =>
-      `<div class="log-line ${l.level}">${escapeHtml(l.text)}</div>`
-    ).join('');
-    logPanel.scrollTop = logPanel.scrollHeight;
-  }
-
-  async function applyDebugBar(on) {
-    showDebugBar = !!on;
-    if (logPanel) {
-      logPanel.classList.toggle('hidden', !showDebugBar);
-      logPanel.hidden = !showDebugBar;
-    }
-    if (btnDebug) {
-      btnDebug.classList.toggle('is-on', showDebugBar);
-      btnDebug.setAttribute('aria-pressed', showDebugBar ? 'true' : 'false');
-    }
-    if (showDebugBar) renderDebugPanel();
-    try {
-      await api.setSettings?.({ showDebugBar: showDebugBar });
-    } catch (_) {}
-  }
-
   async function refreshStatusBadge() {
     try {
       const s = await api.getSettings();
@@ -97,10 +52,6 @@
       }
       if (!s.watchPaths?.length) {
         setBadge('No folders', 'warn');
-        return;
-      }
-      if (s.watcherEnabled === false) {
-        setBadge('Watching off', 'warn');
         return;
       }
       if (s.dryRun) {
@@ -145,11 +96,9 @@
     setTimeout(() => setStatus(runStructureStatus, ''), 5000);
   });
 
-  btnDebug?.addEventListener('click', () => applyDebugBar(!showDebugBar));
-
   if (consoleOut && api.onLogInit && api.onLog) {
     function addLine(entry) {
-      appendLogLine(entry);
+      if (!entry?.message) return;
       const div = document.createElement('div');
       div.className = 'console-line ' + (entry.level || 'info');
       div.innerHTML =
@@ -162,13 +111,11 @@
 
     api.onLogInit((entries) => {
       consoleOut.innerHTML = '';
-      logLines.length = 0;
       if (!entries || entries.length === 0) {
         consoleOut.innerHTML = '<div class="console-empty">No log entries yet. Run sync actions to see output here.</div>';
       } else {
         entries.forEach(addLine);
       }
-      if (showDebugBar) renderDebugPanel();
     });
 
     api.onLog(addLine);
@@ -177,13 +124,5 @@
 
   window.cineTrayUi = { refreshStatusBadge };
 
-  (async () => {
-    try {
-      const s = await api.getSettings();
-      await applyDebugBar(!!s.showDebugBar);
-    } catch (_) {
-      await applyDebugBar(false);
-    }
-    refreshStatusBadge();
-  })();
+  refreshStatusBadge();
 })();

@@ -19,8 +19,8 @@ const { waitForFileReady } = require('./file-ready');
 
 const APP_NAME = 'CineTray';
 
-const ABS_MIN_WINDOW = { width: 1128, height: 755 };
-const DEFAULT_WINDOW = { width: 1128, height: 755 };
+const ABS_MIN_WINDOW = { width: 1087, height: 706 };
+const DEFAULT_WINDOW = { width: 1087, height: 706 };
 
 let structureCheckTimer = null;
 const inFlight = new Set();
@@ -102,7 +102,6 @@ async function runManualProcess() {
 function refreshWatcher() {
   const settings = getSettings();
   stopWatcher();
-  if (!settings.watcherEnabled) return;
   startWatcher(settings, async (filePath) => {
     if (inFlight.has(filePath)) return;
     inFlight.add(filePath);

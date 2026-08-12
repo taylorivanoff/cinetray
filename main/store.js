@@ -8,9 +8,8 @@ const DEFAULT_SETTINGS = {
   tvTemplate: '{show}/Season {s}/{show} - S{s}E{e} - {title}.{ext}',
   movieTemplate: '{title} ({year}).{ext}',
   outputPath: '',
-  watcherEnabled: true,
   usePolling: true,
-  pollingIntervalMs: 60 * 1000,
+  pollingIntervalSeconds: 60,
   dryRun: false,
   mediaExtensions: ['mkv', 'mp4', 'avi', 'mov', 'wmv', 'm4v', 'webm'],
   structureCheckIntervalMs: 30 * 60 * 1000
@@ -25,8 +24,7 @@ const settingsStore = new Store({
     opacity: 1,
     alwaysOnTop: false,
     startMinimised: false,
-    windowBounds: null,
-    showDebugBar: false
+    windowBounds: null
   }
 });
 
@@ -56,6 +54,22 @@ function clampOpacity(value) {
   return Math.min(1, Math.max(0.35, n));
 }
 
+function clampPollingIntervalSeconds(value) {
+  const n = parseInt(value, 10);
+  if (!Number.isFinite(n) || n < 1) return DEFAULT_SETTINGS.pollingIntervalSeconds;
+  return Math.min(3600, n);
+}
+
+function readPollingIntervalSeconds(s) {
+  if (s.pollingIntervalSeconds != null) {
+    return clampPollingIntervalSeconds(s.pollingIntervalSeconds);
+  }
+  if (s.pollingIntervalMs != null) {
+    return clampPollingIntervalSeconds(Math.round(s.pollingIntervalMs / 1000));
+  }
+  return DEFAULT_SETTINGS.pollingIntervalSeconds;
+}
+
 function getSettings() {
   const s = settingsStore.store;
   return {
@@ -64,16 +78,14 @@ function getSettings() {
     tvTemplate: s.tvTemplate ?? DEFAULT_SETTINGS.tvTemplate,
     movieTemplate: s.movieTemplate ?? DEFAULT_SETTINGS.movieTemplate,
     outputPath: s.outputPath ?? '',
-    watcherEnabled: s.watcherEnabled !== false,
     usePolling: s.usePolling !== false,
-    pollingIntervalMs: s.pollingIntervalMs ?? DEFAULT_SETTINGS.pollingIntervalMs,
+    pollingIntervalSeconds: readPollingIntervalSeconds(s),
     dryRun: !!s.dryRun,
     mediaExtensions: s.mediaExtensions ?? DEFAULT_SETTINGS.mediaExtensions,
     structureCheckIntervalMs: s.structureCheckIntervalMs ?? DEFAULT_SETTINGS.structureCheckIntervalMs,
     opacity: clampOpacity(s.opacity),
     alwaysOnTop: !!s.alwaysOnTop,
-    startMinimised: !!s.startMinimised,
-    showDebugBar: !!s.showDebugBar
+    startMinimised: !!s.startMinimised
   };
 }
 
@@ -81,15 +93,15 @@ function setSettings(settings) {
   if (settings.opacity !== undefined) settingsStore.set('opacity', clampOpacity(settings.opacity));
   if (settings.alwaysOnTop !== undefined) settingsStore.set('alwaysOnTop', !!settings.alwaysOnTop);
   if (settings.startMinimised !== undefined) settingsStore.set('startMinimised', !!settings.startMinimised);
-  if (settings.showDebugBar !== undefined) settingsStore.set('showDebugBar', !!settings.showDebugBar);
   if (settings.apiKey !== undefined) settingsStore.set('apiKey', settings.apiKey);
   if (settings.watchPaths !== undefined) settingsStore.set('watchPaths', settings.watchPaths);
   if (settings.tvTemplate !== undefined) settingsStore.set('tvTemplate', settings.tvTemplate);
   if (settings.movieTemplate !== undefined) settingsStore.set('movieTemplate', settings.movieTemplate);
   if (settings.outputPath !== undefined) settingsStore.set('outputPath', settings.outputPath);
-  if (settings.watcherEnabled !== undefined) settingsStore.set('watcherEnabled', settings.watcherEnabled);
   if (settings.usePolling !== undefined) settingsStore.set('usePolling', settings.usePolling);
-  if (settings.pollingIntervalMs !== undefined) settingsStore.set('pollingIntervalMs', settings.pollingIntervalMs);
+  if (settings.pollingIntervalSeconds !== undefined) {
+    settingsStore.set('pollingIntervalSeconds', clampPollingIntervalSeconds(settings.pollingIntervalSeconds));
+  }
   if (settings.dryRun !== undefined) settingsStore.set('dryRun', settings.dryRun);
   if (settings.mediaExtensions !== undefined) settingsStore.set('mediaExtensions', settings.mediaExtensions);
   if (settings.structureCheckIntervalMs !== undefined) {

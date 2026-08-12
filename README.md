@@ -20,7 +20,6 @@ One window covers settings, sync actions, and a live console. Turn on the folder
 - **Structure checker** — finds naming/layout issues in your library folders
 - **System tray app** — close hides to tray; quick access to process and console
 - **Combined UI** — console, settings, and actions in one place
-- **Debug log strip** — toggle a compact log panel above the console
 - **Windows startup** — optional auto-launch on login (disable in Settings → Apps → Startup)
 
 ## Screenshots
@@ -62,13 +61,12 @@ Main app window:
 ## Usage
 
 1. Launch CineTray (the window opens on first run if the API key or watch folders are missing)
-2. Add your TMDB API key and click **Test** — if the key is valid, it is saved automatically and the field loses focus
+2. Add your TMDB API key and click **Test** — if the key is valid, the field loses focus; all settings save automatically when changed
 3. Add one or more watch folders
 4. Optionally set an output folder (leave blank to organize in place under each watch root)
-5. Review templates and click **Save settings** (for watch folders, templates, and other options — the API key does not need a separate save after a successful test)
+5. Review templates and options — changes are saved as you edit
 6. Click **Process now** for a manual scan, or let the watcher handle new files
-7. Click **Debug** to show or hide the compact log strip
-8. Use **Check structure** to scan output folders for naming/layout issues
+7. Use **Check structure** to scan output folders for naming/layout issues
 
 ### Processing modes
 

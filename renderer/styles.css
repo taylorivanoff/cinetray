@@ -219,30 +219,6 @@ body.platform-darwin .titlebar-drag {
   white-space: nowrap;
 }
 
-.log-panel {
-  flex-shrink: 0;
-  max-height: 72px;
-  overflow: auto;
-  padding: 4px 8px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: color-mix(in srgb, var(--bg-button) 60%, var(--bg-elevated));
-  font-family: ui-monospace, "Cascadia Mono", "Consolas", monospace;
-  font-size: 9px;
-  line-height: 1.45;
-  color: var(--text-secondary);
-}
-
-.log-panel.hidden,
-.log-panel[hidden] {
-  display: none !important;
-}
-
-.log-line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.log-line.warn { color: var(--warning); }
-.log-line.error { color: var(--danger); }
-.log-line.info { color: var(--text-secondary); }
-
 .workspace {
   flex: 1;
   min-height: 0;
