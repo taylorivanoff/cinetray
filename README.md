@@ -6,23 +6,21 @@
 [![Downloads](https://img.shields.io/github/downloads/taylorivanoff/cinetray/total)](https://github.com/taylorivanoff/cinetray/releases)
 [![License](https://img.shields.io/github/license/taylorivanoff/cinetray)](LICENSE)
 
-CineTray is a lightweight **FileBot alternative** that runs in your system tray, watches download folders, and automatically renames and organizes movie and TV files using [The Movie Database (TMDB)](https://www.themoviedb.org). Match messy release names to proper titles, sort into Plex-compatible folders, and log every change — without scripts or a heavy media manager.
+CineTray is a lightweight **FileBot alternative** that runs in your system tray, watches download folders, and automatically renames and organizes movie and TV files using [The Movie Database (TMDB)](https://www.themoviedb.org). Match messy release names to proper titles, sort into Plex-compatible folders, and log every change without scripts or a heavy media manager.
 
 One window covers settings, sync actions, and a live console. Turn on the folder watcher for hands-off processing, or click **Process now** for a manual backfill.
 
-<img width="1089" height="738" alt="{CD67F336-AC4D-43EB-9E60-F4C6999802C7}" src="https://github.com/user-attachments/assets/03dbfac7-a4aa-4de4-8690-bff3ea118a96" />
-
 ## Features
 
-- **Background folder watching** — auto-processes new downloads (60s polling by default)
-- **Plex-compatible output** — configurable TV and movie filename templates
-- **TMDB lookup** — resolves show, season, episode, and movie metadata
-- **Dry run mode** — preview renames without moving files
-- **File-ready safety** — skips locked or in-progress downloads until stable
-- **Structure checker** — finds naming/layout issues in your library folders
-- **System tray app** — close hides to tray; quick access to process and console
-- **Combined UI** — console, settings, and actions in one place
-- **Windows startup** — optional auto-launch on login (disable in Settings → Apps → Startup)
+- **Background folder watching** - auto-processes new downloads (60s polling by default)
+- **Plex-compatible output** - configurable TV and movie filename templates
+- **TMDB lookup** - resolves show, season, episode, and movie metadata
+- **Dry run mode** - preview renames without moving files
+- **File-ready safety** - skips locked or in-progress downloads until stable
+- **Structure checker** - finds naming/layout issues in your library folders
+- **System tray app** - close hides to tray; quick access to process and console
+- **Combined UI** - console, settings, and actions in one place
+- **Windows startup** - optional auto-launch on login (disable in Settings → Apps → Startup)
 
 ## What It Does
 
@@ -52,23 +50,23 @@ One window covers settings, sync actions, and a live console. Turn on the folder
 ### macOS
 
 1. Download the `.dmg` from [Releases](https://github.com/taylorivanoff/cinetray/releases) and drag **CineTray** to Applications
-2. If macOS blocks the app as “damaged”, open **System Settings → Privacy & Security** and click **Open Anyway** — this is Gatekeeper on an unsigned build, not a corrupt file
+2. If macOS blocks the app as “damaged”, open **System Settings → Privacy & Security** and click **Open Anyway** - this is Gatekeeper on an unsigned build, not a corrupt file
 
 ## Usage
 
 1. Launch CineTray (the window opens on first run if the API key or watch folders are missing)
-2. Add your TMDB API key and click **Test** — if the key is valid, the field loses focus; all settings save automatically when changed
+2. Add your TMDB API key and click **Test** - if the key is valid, the field loses focus; all settings save automatically when changed
 3. Add one or more watch folders
 4. Optionally set an output folder (leave blank to organize in place under each watch root)
-5. Review templates and options — changes are saved as you edit
+5. Review templates and options - changes are saved as you edit
 6. Click **Process now** for a manual scan, or let the watcher handle new files
 7. Use **Check structure** to scan output folders for naming/layout issues
 
 ### Processing modes
 
-**Automatic** — triggered by new or changed files in watch folders. Uses polling (default 60 seconds). Skips files that appear locked or in-progress and retries on later events.
+**Automatic** - triggered by new or changed files in watch folders. Uses polling (default 60 seconds). Skips files that appear locked or in-progress and retries on later events.
 
-**Manual** — runs a deeper scan of watch folders. Useful for backfills and cleanup. Performs pre-scan structure checks and logs findings.
+**Manual** - runs a deeper scan of watch folders. Useful for backfills and cleanup. Performs pre-scan structure checks and logs findings.
 
 ## Filename Detection
 
@@ -99,16 +97,6 @@ Supported placeholders:
 - TV: `{show}`, `{s}`, `{e}`, `{title}`, `{ext}`
 - Movie: `{title}`, `{year}`, `{ext}`
 
-## Upgrading from Tidy Tray
-
-CineTray is the new name for Tidy Tray. If you used the old app:
-
-1. Install CineTray from [Releases](https://github.com/taylorivanoff/cinetray/releases) — in-place auto-update from Tidy Tray is not supported because the app ID changed
-2. Your settings (API key, watch folders, templates) migrate automatically from `%AppData%\Tidy Tray\` on first launch
-3. Uninstall Tidy Tray when you're satisfied everything works
-
-The old repo redirects here: [github.com/taylorivanoff/cinetray](https://github.com/taylorivanoff/cinetray)
-
 ## Development
 
 ```bash
@@ -136,14 +124,6 @@ Build artifacts land in `dist/`. Packaged builds check for updates from GitHub R
 ### Releasing
 
 Push to `master`. The GitHub Actions workflow auto-bumps the patch version when needed, builds Windows and macOS installers, uploads updater metadata, and creates a GitHub Release. README-only commits skip the bump and release.
-
-## Tech Stack
-
-- [Electron](https://www.electronjs.org/)
-- [electron-tray-base](https://github.com/taylorivanoff/electron-tray-base) — tray, window, splash, settings IPC
-- [TMDB API](https://www.themoviedb.org/documentation/api)
-- [chokidar](https://github.com/paulmillr/chokidar)
-- [electron-store](https://github.com/sindresorhus/electron-store)
 
 ## Attribution
 
