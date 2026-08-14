@@ -1,79 +1,13 @@
-:root {
-  color-scheme: light dark;
-  --bg: #f3f3f3;
-  --bg-elevated: #ffffff;
-  --bg-button: #e8e8ea;
-  --bg-button-hover: #dedee0;
-  --border: rgba(0, 0, 0, 0.08);
-  --text: #1c1c1e;
-  --text-secondary: rgba(28, 28, 30, 0.55);
-  --accent: #0078d4;
-  --accent-text: #ffffff;
-  --danger: #c42b1c;
-  --success: #0f7b0f;
-  --warning: #ca5010;
-  --shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
-  --radius: 8px;
-  --font: "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
-  --titlebar-h: 28px;
-  --control-h: 26px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #1c1c1e;
-    --bg-elevated: #2c2c2e;
-    --bg-button: #3a3a3c;
-    --bg-button-hover: #48484a;
-    --border: rgba(255, 255, 255, 0.1);
-    --text: #f5f5f7;
-    --text-secondary: rgba(245, 245, 247, 0.55);
-    --accent: #4cc2ff;
-    --accent-text: #00344d;
-    --danger: #ff6961;
-    --success: #32d74b;
-    --warning: #ffb86b;
-    --shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
-  }
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html, body {
-  height: 100%;
-  overflow: hidden;
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
-  user-select: none;
-  -webkit-font-smoothing: antialiased;
-}
-
-body.platform-darwin {
-  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", sans-serif;
-  --radius: 12px;
-  --accent: #0a84ff;
-  --accent-text: #ffffff;
-  --titlebar-h: 34px;
-  background: transparent;
-}
+/* Tokens + base come from vendor/shared-styles/index.css */
 
 body.platform-darwin .app {
-  background: rgba(246, 246, 246, 0.55);
+  background: rgba(244, 245, 247, 0.72);
 }
 
 @media (prefers-color-scheme: dark) {
   body.platform-darwin .app {
-    background: rgba(28, 28, 30, 0.45);
+    background: rgba(15, 16, 17, 0.72);
   }
-}
-
-body.platform-win32 {
-  --accent: #0078d4;
 }
 
 .app {

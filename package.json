@@ -19,10 +19,15 @@
     "bump": "node scripts/bump-version.cjs",
     "icon": "node scripts/run-tauri.cjs icon resources/icon.png",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "postinstall": "node scripts/sync-shared-styles.cjs",
+    "sync:styles": "node scripts/sync-shared-styles.cjs",
+    "predev": "node scripts/sync-shared-styles.cjs",
+    "prebuild": "node scripts/sync-shared-styles.cjs"
   },
   "dependencies": {
-    "chokidar": "^4.0.3"
+    "chokidar": "^4.0.3",
+    "@taylorivanoff/shared-styles": "file:../shared-styles"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

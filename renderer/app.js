@@ -5,6 +5,9 @@
   const platform = window.navigator.platform || '';
   if (platform.includes('Mac')) document.body.classList.add('platform-darwin');
   else if (platform.includes('Win')) document.body.classList.add('platform-win32');
+  if (globalThis.tauriTrayBridge?.bindWindowControls) {
+    globalThis.tauriTrayBridge.bindWindowControls(document);
+  }
 
   const runManualBtn = document.getElementById('runManualActions');
   const runManualStatus = document.getElementById('runManualStatusActions');

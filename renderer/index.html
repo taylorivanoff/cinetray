@@ -7,11 +7,12 @@
     content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CineTray</title>
-  <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="vendor/shared-styles/index.css" />
+<link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <div class="app">
+  <div class="app window-shell">
     <header class="titlebar">
       <div class="titlebar-drag">
         <h1 class="app-title">CineTray</h1>
@@ -20,6 +21,17 @@
       <div class="titlebar-actions">
         <button type="button" class="text-btn" id="runStructureCheck">Check structure</button>
         <button type="button" class="text-btn primary" id="runManualActions">Process now</button>
+      </div>
+      <div class="window-controls" aria-label="Window">
+        <button type="button" class="window-btn" data-window-action="minimize" title="Minimize" aria-label="Minimize">
+          <svg viewBox="0 0 10 10" width="10" height="10" aria-hidden="true"><path fill="currentColor" d="M1 5h8v1H1z"/></svg>
+        </button>
+        <button type="button" class="window-btn" data-window-action="maximize" title="Maximize" aria-label="Maximize">
+          <svg viewBox="0 0 10 10" width="10" height="10" aria-hidden="true"><path fill="currentColor" d="M1.5 1.5h7v7h-7zm1 1v5h5v-5z"/></svg>
+        </button>
+        <button type="button" class="window-btn window-btn--close" data-window-action="close" title="Close" aria-label="Close">
+          <svg viewBox="0 0 10 10" width="10" height="10" aria-hidden="true"><path fill="currentColor" d="M1.2 2.1 2.1 1.2 5 4.1 7.9 1.2 8.8 2.1 5.9 5l2.9 2.9-.9.9L5 5.9 2.1 8.8l-.9-.9L4.1 5z"/></svg>
+        </button>
       </div>
     </header>
 
