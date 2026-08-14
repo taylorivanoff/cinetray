@@ -112,6 +112,35 @@ jobs:
         with:
           repository: taylorivanoff/tauri-tray-base
           path: tauri-tray-base
+      - name: Materialize shared-styles
+        shell: bash
+        run: |
+          set -e
+          VENDOR=""
+          for d in app/renderer/vendor/shared-styles app/src/vendor/shared-styles; do
+            if [ -d "$d" ]; then VENDOR="$d"; break; fi
+          done
+          if [ -z "$VENDOR" ]; then
+            echo "No vendored shared-styles found — skip"
+            exit 0
+          fi
+          mkdir -p shared-styles
+          cp "$VENDOR"/*.css shared-styles/
+          cat > shared-styles/package.json <<'EOF'
+          {
+            "name": "@taylorivanoff/shared-styles",
+            "version": "0.0.0",
+            "files": ["tokens.css", "base.css", "window.css", "index.css"],
+            "exports": {
+              ".": "./index.css",
+              "./tokens.css": "./tokens.css",
+              "./base.css": "./base.css",
+              "./window.css": "./window.css",
+              "./index.css": "./index.css"
+            },
+            "style": "index.css"
+          }
+          EOF
       - uses: dtolnay/rust-toolchain@stable
       - uses: oven-sh/setup-bun@v2
       - name: Install frontend deps
