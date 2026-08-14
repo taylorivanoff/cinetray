@@ -1,14 +1,14 @@
-# CineTray
-
-**Automatic movie & TV file renamer for Plex, Jellyfin, and Kodi**
+# CineTray - Automatic movie & TV file renamer for Plex, Jellyfin, and Kodi
 
 [![Release](https://img.shields.io/github/v/release/taylorivanoff/cinetray)](https://github.com/taylorivanoff/cinetray/releases)
 [![Downloads](https://img.shields.io/github/downloads/taylorivanoff/cinetray/total)](https://github.com/taylorivanoff/cinetray/releases)
 [![License](https://img.shields.io/github/license/taylorivanoff/cinetray)](LICENSE)
 
-CineTray is a lightweight **FileBot alternative** that runs in your system tray, watches download folders, and automatically renames and organizes movie and TV files using [The Movie Database (TMDB)](https://www.themoviedb.org). Match messy release names to proper titles, sort into Plex-compatible folders, and log every change without scripts or a heavy media manager.
+CineTray is a lightweight FileBot alternative that runs in your system tray, watches download folders, and automatically renames and organizes movie and TV files using [The Movie Database (TMDB)](https://www.themoviedb.org). Match messy release names to proper titles, sort into Plex-compatible folders, and log every change without scripts or a heavy media manager.
 
 One window covers settings, sync actions, and a live console. Turn on the folder watcher for hands-off processing, or click **Process now** for a manual backfill.
+
+<img width="1089" height="738" alt="{7A1A05C5-9631-4EE2-AF31-9DF5621BA09C}" src="https://github.com/user-attachments/assets/9a983301-c708-4f05-9946-93f5b9d6a4c4" />
 
 ## Features
 
